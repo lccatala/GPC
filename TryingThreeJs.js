@@ -14,8 +14,8 @@ function init() {
     camera.rotation.set(-Math.PI/4, -Math.PI/8, -Math.PI/8);
 
     // Temporal
-    //camera.position.set(0, 300, 0);
-    //camera.rotation.set(-Math.PI/2, 0, 0);
+    //camera.position.set(0, 150, 0);
+    //camera.rotation.set(Math.PI/2, 0, 0);
 }
 
 function update() {
@@ -79,6 +79,9 @@ function createHand(material) {
 function loadScene() {
     var material = new THREE.MeshBasicMaterial({color:0xFF0000, wireframe:true});
 
+    var robot = new THREE.Object3D();
+    var arm = new THREE.Object3D();
+
     var floorGeometry = new THREE.PlaneGeometry(1000, 1000, 10, 10);
     var baseGeometry = new THREE.CylinderGeometry(50, 50, 15, 32);
     var shoulderGeometry = new THREE.CylinderGeometry(20, 20, 18, 32);
@@ -91,7 +94,8 @@ function loadScene() {
     var floor = new THREE.Mesh(floorGeometry, material);
     var base = new THREE.Mesh(baseGeometry, material);
     var shoulder = new THREE.Mesh(shoulderGeometry, material);
-    var arm = new THREE.Mesh(armGeometry, material);
+    var arm = new THREE.Object3D();
+    var sparragus= new THREE.Mesh(armGeometry, material);
     var elbow1 = new THREE.Mesh(elbow1Geometry, material);
     var elbow2 = new THREE.Mesh(elbow2Geometry, material);
     var forearm = new THREE.Object3D();
@@ -104,12 +108,18 @@ function loadScene() {
         forearmParts.push(new THREE.Mesh(forearmPartGeometry, material));
 
     floor.rotation.x = Math.PI / 2;
-    shoulder.rotation.x= Math.PI / 2;
-    arm.position.z = -60;
-    elbow1.position.z = -60;
+    shoulder.rotation.z= Math.PI / 2;
+    sparragus.position.z = -60;
+    arm.rotation.x = Math.PI / 2;
+    elbow1.position.z = -120;
+    //elbow2.position.z = -120;
     elbow2.rotation.x = Math.PI / 2;
-    for (var i = 0; i < 4; ++i)
-        forearmParts[i].position.y = -40;
+    forearm.position.z = -120;
+
+    for (var i = 0; i < 4; ++i) {
+        forearmParts[i].position.z = -40;
+        forearmParts[i].rotation.x = Math.PI / 2;
+    }
     var forearmPartsCentralOffset = 10;
     forearmParts[0].position.x += forearmPartsCentralOffset;
     forearmParts[0].position.z += forearmPartsCentralOffset;
@@ -120,28 +130,26 @@ function loadScene() {
     forearmParts[3].position.x += -forearmPartsCentralOffset;
     forearmParts[3].position.z += forearmPartsCentralOffset;
 
-    wrist.position.y = -80;
+    wrist.position.z = -80;
     wrist.rotation.z = Math.PI / 2;
 
     hand1.rotation.x = -Math.PI / 2;
-    hand1.rotation.z = Math.PI / 2;
-    hand1.position.z -= 20;
-    hand1.position.y -= 10
-
+    hand1.position.y = -15;
+    hand1.position.x = 20;
 
     hand2.rotation.x = -Math.PI / 2;
-    hand2.rotation.z = Math.PI / 2;
-    hand2.position.z -= 20;
-    hand2.position.y += 10
-
+    hand2.position.y = 15;
+    hand2.position.x = 20;
 
     scene.add(floor);
-    scene.add(base);
-    base.add(shoulder);
-    shoulder.add(arm);
+    scene.add(robot);
+    robot.add(base);
+    base.add(arm);
+    arm.add(shoulder);
+    arm.add(sparragus);
     arm.add(elbow1);
-    elbow1.add(elbow2);
-    elbow2.add(forearm);
+    arm.add(forearm);
+    forearm.add(elbow2);
     for (var i = 0; i < 4; ++i)
         forearm.add(forearmParts[i]);
     forearm.add(wrist);
