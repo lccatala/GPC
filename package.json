@@ -1,9 +1,10 @@
 {
   "dependencies": {
-    "cannon-es": "^0.18.0"
+    "cannon-es": "^0.18.0",
+    "gh-pages": "^3.2.3"
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "deploy": "gh-pages -d dist"
-  },
+  }
 }
