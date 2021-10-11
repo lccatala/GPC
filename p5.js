@@ -86,6 +86,8 @@ function initVisual() {
     renderer = new THREE.WebGLRenderer();
     renderer.setSize(window.innerWidth, window.innerHeight);
     renderer.setClearColor(new THREE.Color(0xFFFFFF), 1.0);
+    renderer.shadowMap.enabled = true;
+    renderer.antialias = true;
     document.body.appendChild(renderer.domElement);
     renderer.autoClear = false;
 
@@ -104,6 +106,8 @@ function initVisual() {
     stats = new Stats();
     stats.showPanel(0);
     document.getElementById('container').appendChild(stats.domElement);
+
+
 }
 
 function initGUI() {
@@ -249,7 +253,18 @@ function createHand(material) {
 }
 
 function loadScene() {
+    var imgPath = "images/";
+
+    var loader = new THREE.TextureLoader();
+    var floorTexture = loader.load("home/luis/MIARFID/gpc/images/wet_ground_512x512.jpg", function(x) {console.log(x);}, function(x) {console.log(x);}, function(x) {console.log(x);});
+    console.log(floorTexture);
+    floorTexture.magFilter = THREE.LinearFilter;
+    floorTexture.minFilter = THREE.LinearFilter;
+    floorTexture.repeat.set(3,2);
+    floorTexture.wrapS = floorTexture.wrapT = THREE.MirroredRepeatWrapping;
+
     var material = new THREE.MeshBasicMaterial({color:0xFF0000, wireframe:true});
+    var floorMaterial = new THREE.MeshLambertMaterial({color:'green', map:floorTexture});
 
     arm = new THREE.Object3D();
 
@@ -262,7 +277,7 @@ function loadScene() {
     var forearmPartGeometry = new THREE.BoxGeometry(4, 80, 4);
     var wristGeometry = new THREE.CylinderGeometry(15, 15, 40, 32);
 
-    var floor = new THREE.Mesh(floorGeometry, material);
+    var floor = new THREE.Mesh(floorGeometry, floorMaterial);
     base = new THREE.Mesh(baseGeometry, material);
     var shoulder = new THREE.Mesh(shoulderGeometry, material);
     var sparragus= new THREE.Mesh(armGeometry, material);
@@ -272,6 +287,10 @@ function loadScene() {
     wrist = new THREE.Mesh(wristGeometry, material);
     hand1 = createHand(material);
     hand2 = createHand(material);
+
+    var ambientLight = new THREE.AmbientLight(0xFFFFFF, 0.8);
+    var pointLight = new THREE.PointLight(0xFFFFFF, 0.2);
+    var spotLight = new THREE.SpotLight(0xFFFFFF, 0.7);
 
     var forearmParts = [];
     for (var i = 0; i < 4; ++i)
@@ -310,6 +329,23 @@ function loadScene() {
     hand2.position.y = 15;
     hand2.position.x = 20;
 
+    pointLight.position.set(0, 300, 0);
+
+    spotLight.position.set(50, -159, 0);
+    spotLight.target.position.set(0, 0, 0);
+    spotLight.angle = Math.PI / 10;
+    spotLight.penumbra = 0.2;
+    spotLight.castShadow = true;
+    spotLight.shadow.camera.near = 1;
+    spotLight.shadow.camera.far = 500;
+    spotLight.shadow.camera.fov = 50;
+    spotLight.shadow.mapSize.width = 1024;
+    spotLight.shadow.mapSize.height = 1024;
+    scene.add(new THREE.CameraHelper(spotLight.shadow.camera));
+
+    //scene.add(pointLight);
+    //scene.add(ambientLight);
+    scene.add(spotLight);
     scene.add(floor);
     scene.add(robot);
     robot.add(base);
