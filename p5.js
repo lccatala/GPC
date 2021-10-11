@@ -259,7 +259,7 @@ function loadScene() {
     console.log(dir);
 
     var loader = new THREE.TextureLoader();
-    var floorTexture = loader.load(imgPath+"chess.jpg");
+    var floorTexture = loader.load(imgPath+"chess.png");
     console.log(floorTexture);
     floorTexture.magFilter = THREE.LinearFilter;
     floorTexture.minFilter = THREE.LinearFilter;
