@@ -254,9 +254,12 @@ function createHand(material) {
 
 function loadScene() {
     var imgPath = "images/";
+    var loc = window.location.pathname;
+    var dir = loc.substring(0, loc.lastIndexOf('/'));
+    console.log(dir);
 
     var loader = new THREE.TextureLoader();
-    var floorTexture = loader.load("home/luis/MIARFID/gpc/images/wet_ground_512x512.jpg", function(x) {console.log(x);}, function(x) {console.log(x);}, function(x) {console.log(x);});
+    var floorTexture = loader.load(imgPath+"wet_ground_512x512.jpg");
     console.log(floorTexture);
     floorTexture.magFilter = THREE.LinearFilter;
     floorTexture.minFilter = THREE.LinearFilter;
