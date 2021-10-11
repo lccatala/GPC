@@ -334,7 +334,7 @@ function loadScene() {
 
     pointLight.position.set(0, 300, 0);
 
-    spotLight.position.set(50, -159, 0);
+    spotLight.position.set(50, -200, 0);
     spotLight.target.position.set(0, 0, 0);
     spotLight.angle = Math.PI / 10;
     spotLight.penumbra = 0.2;
